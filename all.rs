@@ -35,7 +35,8 @@ use lazy_static::lazy_static;
 
 type Func = fn() -> ();
 lazy_static! {
-    static ref sols: HashMap<u8, Func> = {
+    static ref sols: HashMap<u8, Func> = 
+    #[allow(clippy::zero_prefixed_literal)] {
         let mut m = HashMap::new();
         m.insert(01u8, one::solve as Func);
 //        m.insert(02u8, two::solve as Func);
@@ -84,7 +85,7 @@ fn main() {
         }
     } else {
         for day in sols.keys().sorted() {
-            sols[&day]();
+            sols[day]();
         }
     }
 }
