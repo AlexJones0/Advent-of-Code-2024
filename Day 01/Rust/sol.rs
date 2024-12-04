@@ -11,6 +11,7 @@ use itertools::Itertools;
 pub fn solve() {
     let contents: String = fs::read_to_string("Day 01/data.txt")
         .expect("Could not read data file")
+        .trim()
         .replace("\r", "");
     let data: Vec<[u32; 2]> = contents
         .lines()

@@ -11,6 +11,7 @@ const NOT_IMPLEMENTED: &str = "Not Yet Implemented";
 pub fn solve() {
     let contents: String = fs::read_to_string("Day XX/data.txt")
         .expect("Could not read data file")
+        .trim()
         .replace("\r", "");
     let data: Vec<&str> = contents
         .split("\n")

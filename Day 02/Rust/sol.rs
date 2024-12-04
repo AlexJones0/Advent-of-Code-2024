@@ -16,6 +16,7 @@ pub fn is_safe(row: &[i32]) -> bool {
 pub fn solve() {
     let contents: String = fs::read_to_string("Day 02/data.txt")
         .expect("Could not read data file")
+        .trim()
         .replace("\r", "");
     let data: Vec<Vec<i32>> = contents
         .split("\n")

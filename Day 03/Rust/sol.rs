@@ -29,6 +29,7 @@ fn calc(muls: &Vec<&&str>) -> u64 {
 pub fn solve() {
     let contents: String = fs::read_to_string("Day 03/data.txt")
         .expect("Could not read data file")
+        .trim()
         .replace("\r", "");
 
     let stmts: Vec<&str> = STMT_REGEX.captures_iter(contents.as_str())
