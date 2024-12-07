@@ -6,11 +6,8 @@
 use std::fs;
 
 pub fn is_safe(row: &[i32]) -> bool {
-    let diffs = row.windows(2)
-        .map(|w| {w[1] - w[0]})
-        .collect::<Vec<_>>();
-    diffs.iter().all(|v| {1 <= *v && *v <= 3})
-    || diffs.iter().all(|v| {-3 <= *v && *v <= -1})
+    let diffs = row.windows(2).map(|w| w[1] - w[0]).collect::<Vec<_>>();
+    diffs.iter().all(|v| 1 <= *v && *v <= 3) || diffs.iter().all(|v| -3 <= *v && *v <= -1)
 }
 
 pub fn solve() {
@@ -20,24 +17,28 @@ pub fn solve() {
         .replace("\r", "");
     let data: Vec<Vec<i32>> = contents
         .split("\n")
-        .map(|row| { row
-            .split_whitespace()
-            .map(|value| {value.parse().unwrap()})
-            .collect()
+        .map(|row| {
+            row.split_whitespace()
+                .map(|value| value.parse().unwrap())
+                .collect()
         })
         .collect();
 
-    println!("Problem 3: {}", data.iter()
-        .filter(|row| is_safe(row))
-        .count());
+    println!(
+        "Problem 3: {}",
+        data.iter().filter(|row| is_safe(row)).count()
+    );
 
-    println!("Problem 4: {}", data.iter()
-        .filter(|row| { (0..row.len())
-            .any(|i| {
-                let mut removed = row.to_owned().clone();
-                removed.remove(i);
-                is_safe(&removed)
+    println!(
+        "Problem 4: {}",
+        data.iter()
+            .filter(|row| {
+                (0..row.len()).any(|i| {
+                    let mut removed = row.to_owned().clone();
+                    removed.remove(i);
+                    is_safe(&removed)
+                })
             })
-        })
-        .count());
+            .count()
+    );
 }

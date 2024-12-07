@@ -3,8 +3,8 @@
  * Author: Alex Jones
  * Desc: Solution to day 1 problems (1 & 2) for Advent of Code 2024, solved in Rust.
  */
-use std::fs;
 use std::collections::HashMap;
+use std::fs;
 
 use itertools::Itertools;
 
@@ -18,10 +18,7 @@ pub fn solve() {
         .map(|row| {
             let items: Vec<u32> = row
                 .split_whitespace()
-                .map(|val| {val
-                    .parse::<u32>()
-                    .unwrap()
-                })
+                .map(|val| val.parse::<u32>().unwrap())
                 .collect();
             [items[0], items[1]]
         })
@@ -31,18 +28,26 @@ pub fn solve() {
         data.iter().map(|x| x[0]).sorted().collect(),
         data.iter().map(|x| x[1]).sorted().collect(),
     ];
-        
-    println!("Problem 1: {}", lists[0].iter()
-        .zip(lists[1].iter())
-        .map(|(i, j)| {i.abs_diff(*j) as u64})
-        .sum::<u64>());
-    
+
+    println!(
+        "Problem 1: {}",
+        lists[0]
+            .iter()
+            .zip(lists[1].iter())
+            .map(|(i, j)| { i.abs_diff(*j) as u64 })
+            .sum::<u64>()
+    );
+
     let mut counts: HashMap<u32, u32> = HashMap::new();
     for item in lists[1].clone() {
         *counts.entry(item).or_default() += 1;
     }
-    
-    println!("Problem 2: {}", lists[0].iter()
-        .map(|i| {(i * counts.get(i).unwrap_or(&0)) as u64})
-        .sum::<u64>());
+
+    println!(
+        "Problem 2: {}",
+        lists[0]
+            .iter()
+            .map(|i| { (i * counts.get(i).unwrap_or(&0)) as u64 })
+            .sum::<u64>()
+    );
 }

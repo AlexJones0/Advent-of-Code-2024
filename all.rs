@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use clap::{Parser};
+use clap::Parser;
 use itertools::Itertools;
 use lazy_static::lazy_static;
 
@@ -35,7 +35,7 @@ use lazy_static::lazy_static;
 
 type Func = fn() -> ();
 lazy_static! {
-    static ref sols: HashMap<u8, Func> = 
+    static ref sols: HashMap<u8, Func> =
     #[allow(clippy::zero_prefixed_literal)] {
         let mut m = HashMap::new();
         m.insert(01u8, one::solve as Func);
@@ -75,7 +75,7 @@ struct Opts {
 
 fn main() {
     let opts = Opts::parse();
-    
+
     if opts.day.is_some() {
         let day = opts.day.unwrap();
         if sols.contains_key(&day) {
