@@ -15,13 +15,13 @@ fn satisfies(
     if current > target || start >= vals.len() {
         return current == target;
     }
-    return operators
+    operators
         .iter()
         .map(|op| satisfies(target, op(current, vals[start]), vals, start + 1, operators))
-        .any(|x| x);
+        .any(|x| x)
 }
 
-fn total_valid(data: &Vec<(i64, Vec<i64>)>, operators: &Vec<fn(i64, i64) -> i64>) -> i64 {
+fn total_valid(data: &[(i64, Vec<i64>)], operators: &Vec<fn(i64, i64) -> i64>) -> i64 {
     data.iter()
         .filter(|(target, vals)| satisfies(*target, vals[0], vals, 1, operators))
         .map(|x| x.0)
