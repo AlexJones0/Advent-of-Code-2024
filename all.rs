@@ -25,7 +25,7 @@ use lazy_static::lazy_static;
 #[path = "./Day 16/Rust/sol.rs"] mod sixteen;
 #[path = "./Day 17/Rust/sol.rs"] mod seventeen;
 #[path = "./Day 18/Rust/sol.rs"] mod eighteen;
-//#[path = "./Day 19/Rust/sol.rs"] mod nineteen;
+#[path = "./Day 19/Rust/sol.rs"] mod nineteen;
 //#[path = "./Day 20/Rust/sol.rs"] mod twenty;
 //#[path = "./Day 21/Rust/sol.rs"] mod twentyOne;
 //#[path = "./Day 22/Rust/sol.rs"] mod twentyTwo;
@@ -56,7 +56,7 @@ lazy_static! {
         m.insert(16u8, sixteen::solve as Func);
         m.insert(17u8, seventeen::solve as Func);
         m.insert(18u8, eighteen::solve as Func);
-//        m.insert(19u8, nineteen::solve as Func);
+        m.insert(19u8, nineteen::solve as Func);
 //        m.insert(20u8, twenty::solve as Func);
 //        m.insert(21u8, twentyOne::solve as Func);
 //        m.insert(22u8, twentyTwo::solve as Func);
