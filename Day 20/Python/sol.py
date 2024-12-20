@@ -33,7 +33,7 @@ def find_path_len_from(grid: list[str], start: vec_2) -> tuple[list[int], list[v
         path_len += 1
     return dist_from, nodes
 
-def find_num_cheats(grid: list[str], start: vec_2, cheat_length: int, cutoff: int) -> int:
+def find_num_cheats_low_length(grid: list[str], start: vec_2, cheat_length: int, cutoff: int) -> int:
     height, width = len(grid), len(grid[0])
     start_dist, nodes = find_path_len_from(grid, start)
     count = 0
@@ -50,6 +50,29 @@ def find_num_cheats(grid: list[str], start: vec_2, cheat_length: int, cutoff: in
                 taxicab = dy + abs(x2 - x1)
                 moves_saved = dist_2 - dist_1 - taxicab
                 count += moves_saved >= cutoff
+    return count
+
+def find_num_cheats(grid: list[str], start: vec_2, cheat_length: int, cutoff: int) -> int:
+    if cheat_length < 8:
+        return find_num_cheats_low_length(grid, start, cheat_length, cutoff)
+    width = len(grid[0])
+    start_dist, nodes = find_path_len_from(grid, start)
+    count = 0
+    for i, (y1, x1) in enumerate(nodes):
+        dist_1 = start_dist[y1 * width + x1]
+        i += 1
+        while i < len(nodes):
+            (y2, x2) = nodes[i]
+            taxicab = abs(y2 - y1) + abs(x2 - x1)
+            if taxicab > cheat_length:
+                i += taxicab - cheat_length
+                continue
+            i += 1
+            dist_2 = start_dist[y2 * width + x2]
+            if dist_2 - cutoff <= dist_1:
+                continue
+            moves_saved = dist_2 - dist_1 - taxicab
+            count += moves_saved >= cutoff
     return count
 
 start = min(((i, j)) for i, r in enumerate(data) for j, c in enumerate(r) if c == 'S')
