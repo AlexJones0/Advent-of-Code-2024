@@ -12,18 +12,26 @@ fn satisfies(
     start: usize,
     operators: &Vec<fn(i64, i64) -> i64>,
 ) -> bool {
-    if current > target || start >= vals.len() {
+    if current < target || start >= vals.len() {
         return current == target;
     }
     operators
         .iter()
-        .map(|op| satisfies(target, op(current, vals[start]), vals, start + 1, operators))
+        .map(|op| {
+            satisfies(
+                target,
+                op(current, vals[vals.len() - start]),
+                vals,
+                start + 1,
+                operators,
+            )
+        })
         .any(|x| x)
 }
 
 fn total_valid(data: &[(i64, Vec<i64>)], operators: &Vec<fn(i64, i64) -> i64>) -> i64 {
     data.iter()
-        .filter(|(target, vals)| satisfies(*target, vals[0], vals, 1, operators))
+        .filter(|(target, vals)| satisfies(vals[0], *target, vals, 1, operators))
         .map(|x| x.0)
         .sum()
 }
@@ -49,8 +57,17 @@ pub fn solve() {
         })
         .collect();
 
-    let mut operators: Vec<fn(i64, i64) -> i64> = vec![|x, y| x + y, |x, y| x * y];
+    let mut operators: Vec<fn(i64, i64) -> i64> =
+        vec![|x, y| x - y, |x, y| if x % y != 0 { -1 } else { x / y }];
     println!("Problem 13: {}", total_valid(&data, &operators));
-    operators.push(|x, y| (x.to_string() + &y.to_string()).parse::<i64>().unwrap());
+    operators.push(|x, y| {
+        let x = x.to_string();
+        let y = y.to_string();
+        if !&x.ends_with(&y) || x == y {
+            -1
+        } else {
+            x[..x.len() - y.len()].parse::<i64>().unwrap()
+        }
+    });
     println!("Problem 14: {}", total_valid(&data, &operators));
 }
