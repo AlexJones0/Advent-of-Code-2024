@@ -3,7 +3,6 @@
  * Author: Alex Jones
  * Desc: Solution to day 21 problems (41 & 42) for Advent of Code 2024, solved in Rust.
  */
-use itertools::Itertools;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fs;
@@ -68,25 +67,26 @@ fn find_shortest(memo: &mut Memo, start: Pos, end: Pos, robot: usize, robots: us
         memo.insert((start, end, robot), retval);
         return retval;
     }
-    let invalid = find_pos(b' ', robot != robots);
     let vertical = if delta.0 < 0 { b'^' } else { b'v' };
     let horizontal = if delta.1 < 0 { b'<' } else { b'>' };
-    let mut vert_hori_path = vec![vertical; abs_delta.0];
-    vert_hori_path.extend(vec![horizontal; abs_delta.1]);
-    let mut hori_vert_path = vec![horizontal; abs_delta.1];
-    hori_vert_path.extend(vec![vertical; abs_delta.0]);
     let mut shortest_length = None;
-    for verts in (0..path_size).combinations(abs_delta.0) {
-        let mut path = vec![horizontal; path_size];
-        for i in verts {
-            path[i] = vertical;
-        }
-        // Check it doesn't path through invalid
-        if invalid_path(start, end, invalid, 0) && path == vert_hori_path
-            || invalid_path(start, end, invalid, 1) && path == hori_vert_path
-        {
-            continue;
-        }
+    // Optimisation: the cheapest path will never zig-zag (moving is expensive, repeatedly
+    // pressing "A" is cheap). So no BFS/combinatorics solution is required - it is
+    // sufficient to just check the below two paths, so long as they are valid (don't walk
+    // through the area with no button)
+    let invalid = find_pos(b' ', robot != robots);
+    let mut paths = Vec::with_capacity(2);
+    if !invalid_path(start, end, invalid, 0) {
+        let mut vert_hori_path = vec![vertical; abs_delta.0];
+        vert_hori_path.extend(vec![horizontal; abs_delta.1]);
+        paths.push(vert_hori_path);
+    }
+    if !invalid_path(start, end, invalid, 1) {
+        let mut hori_vert_path = vec![horizontal; abs_delta.1];
+        hori_vert_path.extend(vec![vertical; abs_delta.0]);
+        paths.push(hori_vert_path);
+    }
+    for mut path in paths {
         path.push(b'A');
         // Find the cost of the path by recursively using the next robot to make
         // each button press on the path

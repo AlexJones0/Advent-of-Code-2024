@@ -7,7 +7,6 @@ data = open("Day 21/data.txt", "r").read().strip().replace("\r","").split("\n")
 moves = {"^": (-1, 0), ">": (0, 1), "v": (1, 0), "<": (0, -1)}
 
 from functools import cache
-from itertools import combinations
 Vec2 = tuple[int, int]
 
 def find_pos(char: str, is_directional: bool) -> Vec2:
@@ -25,20 +24,20 @@ def find_shortest(start: Vec2, end: Vec2, robot: int, robots: int) -> int:
     # For robot 1, it just requires moving the taxicab distance plus 1 ('activate')
     if robot == 1:
         return path_size + 1
-    invalid = find_pos(" ", robot != robots)
     vertical = "^" if delta[0] < 0 else "v"
     horizontal = "<" if delta[1] < 0 else ">"
-    vert_hori_path = vertical * abs_delta[0] + horizontal * abs_delta[1] + "A"
-    hori_vert_path = horizontal * abs_delta[1] + vertical * abs_delta[0] + "A"
-    # Use combinatorics to find all paths from start -> end
     shortest_length = float('inf')
-    for verts in combinations(range(path_size), abs_delta[0]):
-        path = [vertical if i in verts else horizontal for i in range(path_size)]
-        path = "".join(path) + "A"
-        # Check it doesn't path through invalid
-        if invalid_path(start, end, invalid, 0) and path == vert_hori_path or \
-           invalid_path(start, end, invalid, 1) and path == hori_vert_path:
-            continue
+    # Optimisation: the cheapest path will never zig-zag (moving is expensive, repeatedly
+    # pressing "A" is cheap). So no BFS/combinatorics solution is required - it is
+    # sufficient to just check the below two paths, so long as they are valid (don't walk
+    # through the area with no button)
+    invalid = find_pos(" ", robot != robots)
+    paths = []
+    if not invalid_path(start, end, invalid, 0): 
+        paths.append(vertical * abs_delta[0] + horizontal * abs_delta[1] + "A")
+    if not invalid_path(start, end, invalid, 1): 
+        paths.append(horizontal * abs_delta[1] + vertical * abs_delta[0] + "A")
+    for path in paths:
         # Find the cost of the path by recursively using the next robot to make
         # each button press on the path
         current_pos = find_pos("A", True)
