@@ -20,7 +20,7 @@ pub fn solve() {
         .replace("\r", "");
     let mut data: Vec<u32> = contents.split("\n").map(|n| n.parse().unwrap()).collect();
 
-    let mut bananas = [0; 160000];
+    let mut bananas = [0; 130321];
     let mut deltas = VecDeque::with_capacity(4);
     deltas.extend([0; 4]);
     for num in &mut data {
@@ -40,7 +40,7 @@ pub fn solve() {
             deltas.push_back(new_price - price);
             price = new_price;
             let perfect_hash =
-                (80000 + deltas[0] * 8000 + deltas[1] * 400 + deltas[2] * 20 + deltas[3]) as usize;
+                (61731 + deltas[0] * 6859 + deltas[1] * 361 + deltas[2] * 19 + deltas[3]) as usize;
             if !seen.contains(&perfect_hash) {
                 seen.insert(perfect_hash);
                 bananas[perfect_hash] += price;

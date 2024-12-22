@@ -13,7 +13,7 @@ def get_next_secret_number(num: int) -> int:
     num = ((num << 11) ^ num) & 0xFFFFFF
     return num
 
-bananas = [0 for _ in range(160000)]
+bananas = [0 for _ in range(130321)]
 deltas = deque(maxlen=4)
 for i in range(len(data)):
     price = data[i] % 10
@@ -28,7 +28,7 @@ for i in range(len(data)):
         new_price = data[i] % 10
         deltas.append(new_price - price)
         price = new_price
-        perfect_hash = 80000 + deltas[0] * 8000 + deltas[1] * 400 + deltas[2] * 20 + deltas[3]
+        perfect_hash = 61731 + deltas[0] * 6859 + deltas[1] * 361 + deltas[2] * 19 + deltas[3]
         if perfect_hash not in seen:
             seen.add(perfect_hash)
             bananas[perfect_hash] += price
